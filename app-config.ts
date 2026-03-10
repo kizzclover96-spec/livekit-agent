@@ -36,11 +36,12 @@ export const APP_CONFIG_DEFAULTS: AppConfig = {
   companyName: 'Malvin',
   pageTitle: 'Malvin ai',
   pageDescription: 'Your advance AI personal Assistant',
-
+  logo: '/Malvin_self.png',
   supportsChatInput: true,
   supportsVideoInput: true,
   supportsScreenShare: true,
   isPreConnectBufferEnabled: true,
+  accent: 'blue',
 
   
   accent: '#002cf2',
