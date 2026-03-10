@@ -1,3 +1,4 @@
+export const dynamic = 'force-static';
 import { Public_Sans } from 'next/font/google';
 import localFont from 'next/font/local';
 import { headers } from 'next/headers';

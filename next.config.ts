@@ -7,7 +7,8 @@ const nextConfig: NextConfig = {
   },
   eslint: {
     ignoreDuringBuilds: true, // This stops the "Red Error" for formatting
-  }
+  },
+  trailingSlash: true,
 };
 
 export default nextConfig;
