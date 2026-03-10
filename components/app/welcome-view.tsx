@@ -1,5 +1,5 @@
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import Image from 'next/image'; // Ensure Image is imported!
 
 function WelcomeImage() {
   return (
@@ -26,30 +26,27 @@ export const WelcomeView = ({
 }: React.ComponentProps<'div'> & WelcomeViewProps) => {
   return (
     <div ref={ref}>
-      {/* Added animate-gradient and min-h-screen here */}
       <section className="animate-gradient flex min-h-screen flex-col items-center justify-center text-center">
         <WelcomeImage />
 
-        <p className="max-w-prose pt-1 font-medium leading-6 text-white">
-          Ask malvin any thing
-        </p>
+        <p className="max-w-prose pt-1 leading-6 font-medium text-white">Ask malvin any thing</p>
 
         <Button
           size="lg"
           onClick={onStartCall}
-          className="mt-6 w-64 rounded-full font-mono text-xs font-bold uppercase tracking-wider"
+          className="mt-6 w-64 rounded-full font-mono text-xs font-bold tracking-wider uppercase"
         >
           {startButtonText}
         </Button>
       </section>
 
       <div className="fixed bottom-5 left-0 flex w-full items-center justify-center">
-        <p className="max-w-prose text-pretty pt-1 text-xs font-normal leading-5 text-white/80 md:text-sm">
+        <p className="max-w-prose pt-1 text-xs leading-5 font-normal text-pretty text-white/80 md:text-sm">
           Need help? Check out the{' '}
           <a
             target="_blank"
             rel="noopener noreferrer"
-            href="mailto:malvinsupportteam@gmail.com" 
+            href="mailto:malvinsupportteam@gmail.com"
             className="underline"
           >
             Voice AI quickstart
