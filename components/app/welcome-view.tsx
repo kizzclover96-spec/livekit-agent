@@ -3,14 +3,15 @@ import { Button } from '@/components/ui/button';
 
 function WelcomeImage() {
   return (
-    <Image
-      src="/Malvin_self.png"
-      alt="Malvin_self"
-      width={250}
-      height={250}
-      className="mb-4"
-      priority
-    />
+    <div className="relative h-[250px] w-[250px] overflow-hidden rounded-full border-4 border-white/10 mb-4">
+      <Image
+        src="/Malvin_self.png"
+        alt="Malvin_self"
+        fill // This makes it fill the rounded container
+        className="object-cover"
+        priority
+      />
+    </div>
   );
 }
 
