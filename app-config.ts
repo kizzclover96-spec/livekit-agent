@@ -41,7 +41,6 @@ export const APP_CONFIG_DEFAULTS: AppConfig = {
   supportsVideoInput: true,
   supportsScreenShare: true,
   isPreConnectBufferEnabled: true,
-  accent: 'blue',
 
   
   accent: '#002cf2',
