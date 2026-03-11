@@ -21,16 +21,13 @@ function AppSetup() {
 }
 
 export function App({ appConfig }: { appConfig: AppConfig }) {
-  // 1. Force the endpoint to your API route
   const tokenSource = useMemo(() => {
     return TokenSource.endpoint('/api/connection-details');
   }, []);
 
-  // 2. Initialize the session
   const session = useSession(tokenSource);
 
-  // 3. AUTO-START LOGIC: 
-  // This tells the app to attempt a connection as soon as the session object is ready.
+  // AUTO-START TRIGGER
   useEffect(() => {
     if (session.connectionState === 'disconnected') {
       session.start();
@@ -41,14 +38,12 @@ export function App({ appConfig }: { appConfig: AppConfig }) {
     <AgentSessionProvider session={session}>
       <AppSetup />
       <main className="grid h-svh grid-cols-1 place-content-center">
-        {/* The ViewController handles the screen swap. 
-            It will flip from "Welcome" to "Room" once session.connectionState is 'connected'. */}
         <ViewController appConfig={appConfig} />
       </main>
 
-      {/* Explicitly passing the session to the button to ensure it has the right context. */}
       <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50">
-        <StartAudioButton label="Connect & Start Audio" session={session} />
+        {/* Removed the 'session' prop to fix the Type Error */}
+        <StartAudioButton label="Connect & Start Audio" />
       </div>
 
       <Toaster position="top-center" />
