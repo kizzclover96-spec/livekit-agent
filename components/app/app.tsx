@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { TokenSource } from 'livekit-client';
 import { useSession } from '@livekit/components-react';
 import { WarningIcon } from '@phosphor-icons/react/dist/ssr';
@@ -20,50 +20,37 @@ function AppSetup() {
   return null;
 }
 
-interface AppProps {
-  appConfig: AppConfig;
-}
-
-export function App({ appConfig }: AppProps) {
-  // FIX 1: Force the app to use YOUR backend route instead of the LiveKit sandbox.
+export function App({ appConfig }: { appConfig: AppConfig }) {
+  // 1. Force the endpoint to your API route
   const tokenSource = useMemo(() => {
     return TokenSource.endpoint('/api/connection-details');
   }, []);
 
-  // FIX 2: Explicitly request the 'default' agent to match your route.ts logic.
-  const session = useSession(
-    tokenSource,
-    { agentName: 'default' } 
-  );
+  // 2. Initialize the session
+  const session = useSession(tokenSource);
+
+  // 3. DEBUG LOG: Open your browser console (F12) to see this!
+  useEffect(() => {
+    console.log("Current Session State:", session.state);
+    if (session.error) console.error("Session Error:", session.error);
+  }, [session.state, session.error]);
 
   return (
     <AgentSessionProvider session={session}>
       <AppSetup />
       <main className="grid h-svh grid-cols-1 place-content-center">
+        {/* The ViewController handles the screen swap. 
+            If session.state isn't 'connected', it stays on the Welcome screen. */}
         <ViewController appConfig={appConfig} />
       </main>
-      
-      {/* IMPORTANT: This template often requires you to click this button 
-          AFTER clicking "Wake Malvin" to enable the microphone.
-      */}
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2">
-        <StartAudioButton label="Enable Microphone" />
+
+      {/* This button is vital. If the browser blocks audio, 
+          the session might 'connect' but stay silent until this is clicked. */}
+      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50">
+        <StartAudioButton label="Connect & Start Audio" />
       </div>
 
-      <Toaster
-        icons={{
-          warning: <WarningIcon weight="bold" />,
-        }}
-        position="top-center"
-        className="toaster group"
-        style={
-          {
-            '--normal-bg': 'var(--popover)',
-            '--normal-text': 'var(--popover-foreground)',
-            '--normal-border': 'var(--border)',
-          } as React.CSSProperties
-        }
-      />
+      <Toaster position="top-center" />
     </AgentSessionProvider>
   );
 }
