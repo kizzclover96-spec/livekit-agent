@@ -21,32 +21,49 @@ function AppSetup() {
 }
 
 export function App({ appConfig }: { appConfig: AppConfig }) {
+  // 1. Force the app to use your internal API route (bypasses sandbox)
   const tokenSource = useMemo(() => {
     return TokenSource.endpoint('/api/connection-details');
   }, []);
 
+  // 2. Initialize the session object
   const session = useSession(tokenSource);
 
-  // AUTO-START TRIGGER
+  // 3. THE TRIGGER: This forces the connection attempt.
+  // We use a small timeout to make sure the mobile browser is fully loaded.
   useEffect(() => {
-    if (session.connectionState === 'disconnected') {
-      session.start();
-    }
+    const timeout = setTimeout(() => {
+      if (session.connectionState === 'disconnected') {
+        console.log("Ignition: Connecting to Malvin...");
+        session.start().catch((err) => console.error("Auto-start failed:", err));
+      }
+    }, 500); 
+
+    return () => clearTimeout(timeout);
   }, [session]);
 
   return (
     <AgentSessionProvider session={session}>
       <AppSetup />
+      
       <main className="grid h-svh grid-cols-1 place-content-center">
+        {/* ViewController automatically flips the screen once session.connectionState is 'connected' */}
         <ViewController appConfig={appConfig} />
       </main>
 
-      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50">
-        {/* Removed the 'session' prop to fix the Type Error */}
+      {/* Manual Button: Serves as a backup and handles browser audio unlock */}
+      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
         <StartAudioButton label="Connect & Start Audio" />
       </div>
 
-      <Toaster position="top-center" />
+      <Toaster 
+        position="top-center" 
+        style={{
+          '--normal-bg': 'var(--popover)',
+          '--normal-text': 'var(--popover-foreground)',
+          '--normal-border': 'var(--border)',
+        } as React.CSSProperties}
+      />
     </AgentSessionProvider>
   );
 }
