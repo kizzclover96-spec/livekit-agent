@@ -1,3 +1,6 @@
+'use client';
+
+import React, { forwardRef } from 'react'; // Added forwardRef
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 
@@ -7,7 +10,7 @@ function WelcomeImage() {
       <Image
         src="/Malvin_self.png"
         alt="Malvin_self"
-        fill // This makes it fill the rounded container
+        fill
         className="object-cover"
         priority
       />
@@ -20,41 +23,44 @@ interface WelcomeViewProps {
   onStartCall: () => void;
 }
 
-export const WelcomeView = ({
-  startButtonText,
-  onStartCall,
-  ref,
-}: React.ComponentProps<'div'> & WelcomeViewProps) => {
-  return (
-    <div ref={ref}>
-      <section className="animate-gradient flex min-h-screen flex-col items-center justify-center text-center">
-        <WelcomeImage />
+// Wrap the component in forwardRef so 'motion' works correctly
+export const WelcomeView = forwardRef<HTMLDivElement, WelcomeViewProps>(
+  ({ startButtonText, onStartCall }, ref) => {
+    return (
+      <div ref={ref}>
+        <section className="animate-gradient flex min-h-screen flex-col items-center justify-center text-center">
+          <WelcomeImage />
 
-        <p className="max-w-prose pt-1 leading-6 font-medium text-white">Ask malvin any thing</p>
+          <p className="max-w-prose pt-1 leading-6 font-medium text-white">
+            Ask malvin any thing
+          </p>
 
-        <Button
-          size="lg"
-          onClick={onStartCall}
-          className="mt-6 w-64 rounded-full font-mono text-xs font-bold tracking-wider uppercase"
-        >
-          {startButtonText}
-        </Button>
-      </section>
-
-      <div className="fixed bottom-5 left-0 flex w-full items-center justify-center">
-        <p className="max-w-prose pt-1 text-xs leading-5 font-normal text-pretty text-white/80 md:text-sm">
-          Need help? Check out the{' '}
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href="mailto:malvinsupportteam@gmail.com"
-            className="underline"
+          <Button
+            size="lg"
+            onClick={onStartCall} // This triggers the 'start' from ViewController
+            className="mt-6 w-64 rounded-full font-mono text-xs font-bold tracking-wider uppercase"
           >
-            Support Email address
-          </a>
-          .
-        </p>
+            {startButtonText}
+          </Button>
+        </section>
+
+        <div className="fixed bottom-5 left-0 flex w-full items-center justify-center">
+          <p className="max-w-prose pt-1 text-xs leading-5 font-normal text-pretty text-white/80 md:text-sm">
+            Need help? Check out the{' '}
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href="mailto:malvinsupportteam@gmail.com"
+              className="underline"
+            >
+              Support Email address
+            </a>
+            .
+          </p>
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+);
+
+WelcomeView.displayName = 'WelcomeView';
