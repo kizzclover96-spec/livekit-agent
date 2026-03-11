@@ -29,21 +29,26 @@ export function App({ appConfig }: { appConfig: AppConfig }) {
   // 2. Initialize the session
   const session = useSession(tokenSource);
 
- 
+  // 3. AUTO-START LOGIC: 
+  // This tells the app to attempt a connection as soon as the session object is ready.
+  useEffect(() => {
+    if (session.connectionState === 'disconnected') {
+      session.start();
+    }
+  }, [session]);
 
   return (
     <AgentSessionProvider session={session}>
       <AppSetup />
       <main className="grid h-svh grid-cols-1 place-content-center">
         {/* The ViewController handles the screen swap. 
-            If session.state isn't 'connected', it stays on the Welcome screen. */}
+            It will flip from "Welcome" to "Room" once session.connectionState is 'connected'. */}
         <ViewController appConfig={appConfig} />
       </main>
 
-      {/* This button is vital. If the browser blocks audio, 
-          the session might 'connect' but stay silent until this is clicked. */}
+      {/* Explicitly passing the session to the button to ensure it has the right context. */}
       <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50">
-        <StartAudioButton label="Connect & Start Audio" />
+        <StartAudioButton label="Connect & Start Audio" session={session} />
       </div>
 
       <Toaster position="top-center" />
