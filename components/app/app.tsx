@@ -29,12 +29,12 @@ export function App({ appConfig }: { appConfig: AppConfig }) {
   // 2. Initialize the session
   const session = useSession(tokenSource);
 
-  // 3. DEBUG LOG: Open your browser console (F12) to see this!
+  // 3. DEBUG LOG: Using the correct property name 'connectionState'
   useEffect(() => {
-    console.log("Current Session State:", session.state);
+    console.log("Current Session State:", session.connectionState);
     if (session.error) console.error("Session Error:", session.error);
-  }, [session.state, session.error]);
-
+  }, [session.connectionState, session.error]);
+  
   return (
     <AgentSessionProvider session={session}>
       <AppSetup />
