@@ -72,6 +72,7 @@ function createParticipantToken(
     ...userInfo,
     ttl: '15m',
   });
+  
   const grant: VideoGrant = {
     room: roomName,
     roomJoin: true,
@@ -81,11 +82,15 @@ function createParticipantToken(
   };
   at.addGrant(grant);
 
-  if (agentName) {
-    at.roomConfig = new RoomConfiguration({
-      agents: [{ agentName }],
-    });
-  }
+  // CHANGE STARTS HERE
+  // If agentName is missing from the body (which it usually is), 
+  // we force it to 'default' to trigger your deployed agent.
+  const targetAgent = agentName || 'default';
+
+  at.roomConfig = new RoomConfiguration({
+    agents: [{ agentName: targetAgent }],
+  });
+  // CHANGE ENDS HERE
 
   return at.toJwt();
 }
