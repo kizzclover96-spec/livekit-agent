@@ -50,7 +50,7 @@ export const WelcomeView = ({
             href="mailto:malvinsupportteam@gmail.com"
             className="underline"
           >
-            Voice AI quickstart
+            Support Email address
           </a>
           .
         </p>

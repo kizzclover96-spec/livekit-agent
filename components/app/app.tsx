@@ -11,14 +11,12 @@ import { ViewController } from '@/components/app/view-controller';
 import { Toaster } from '@/components/ui/sonner';
 import { useAgentErrors } from '@/hooks/useAgentErrors';
 import { useDebugMode } from '@/hooks/useDebug';
-import { getSandboxTokenSource } from '@/lib/utils';
 
 const IN_DEVELOPMENT = process.env.NODE_ENV !== 'production';
 
 function AppSetup() {
   useDebugMode({ enabled: IN_DEVELOPMENT });
   useAgentErrors();
-
   return null;
 }
 
@@ -27,15 +25,15 @@ interface AppProps {
 }
 
 export function App({ appConfig }: AppProps) {
+  // FIX 1: Force the app to use YOUR backend route instead of the LiveKit sandbox.
   const tokenSource = useMemo(() => {
-    return typeof process.env.NEXT_PUBLIC_CONN_DETAILS_ENDPOINT === 'string'
-      ? getSandboxTokenSource(appConfig)
-      : TokenSource.endpoint('/api/connection-details');
-  }, [appConfig]);
+    return TokenSource.endpoint('/api/connection-details');
+  }, []);
 
+  // FIX 2: Explicitly request the 'default' agent to match your route.ts logic.
   const session = useSession(
     tokenSource,
-    appConfig.agentName ? { agentName: appConfig.agentName } : undefined
+    { agentName: 'default' } 
   );
 
   return (
@@ -44,7 +42,14 @@ export function App({ appConfig }: AppProps) {
       <main className="grid h-svh grid-cols-1 place-content-center">
         <ViewController appConfig={appConfig} />
       </main>
-      <StartAudioButton label="Start Audio" />
+      
+      {/* IMPORTANT: This template often requires you to click this button 
+          AFTER clicking "Wake Malvin" to enable the microphone.
+      */}
+      <div className="fixed bottom-8 left-1/2 -translate-x-1/2">
+        <StartAudioButton label="Enable Microphone" />
+      </div>
+
       <Toaster
         icons={{
           warning: <WarningIcon weight="bold" />,
